@@ -1,22 +1,188 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.HomeFragment">
+    android:padding="16dp">
 
+    <!-- Titolo e Switch On/Off -->
     <TextView
-        android:id="@+id/text_home"
-        android:layout_width="match_parent"
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Alarm"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Switch
+        android:id="@+id/switchOnOff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitle" />
+
+    <!-- Set Alarm Button -->
+    <Button
+        android:id="@+id/btnSetAlarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="[8am]"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+    <!-- Time Adjustments -->
+    <TextView
+        android:id="@+id/tvTimeAdjustments"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="-30 min   -20 min   -10 min   8am   +10 min"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnSetAlarm" />
+
+    <!-- Slider for Sound -->
+    <TextView
+        android:id="@+id/tvSoundLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="S"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTimeAdjustments"
+        android:layout_marginTop="16dp" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/sliderSound"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:valueFrom="-30"
+        android:valueTo="10"
+        android:stepSize="1"
+        android:thumbTint="@color/black"
+        app:trackColorInactive="#BDBDBD"
+        app:trackColorActive="#4CAF50"
+        app:thumbStrokeColor="@color/black"
+        app:thumbStrokeWidth="2dp"
+        app:labelBehavior="floating"
+        app:layout_constraintStart_toEndOf="@id/tvSoundLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvSoundLabel" />
+
+    <!-- Slider for Light -->
+    <TextView
+        android:id="@+id/tvLightLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="L"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sliderSound"
+        android:layout_marginTop="16dp" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/sliderLight"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:valueFrom="-30"
+        android:valueTo="10"
+        android:stepSize="1"
+        android:thumbTint="@color/black"
+        app:trackColorInactive="#BDBDBD"
+        app:trackColorActive="#4CAF50"
+        app:thumbStrokeColor="@color/black"
+        app:thumbStrokeWidth="2dp"
+        app:labelBehavior="floating"
+        app:layout_constraintStart_toEndOf="@id/tvLightLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvLightLabel" />
+
+    <!-- Slider for Vibration -->
+    <TextView
+        android:id="@+id/tvVibrationLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="V"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sliderLight"
+        android:layout_marginTop="16dp" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/sliderVibration"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:valueFrom="-30"
+        android:valueTo="10"
+        android:stepSize="1"
+        android:thumbTint="@color/black"
+        app:trackColorInactive="#BDBDBD"
+        app:trackColorActive="#4CAF50"
+        app:thumbStrokeColor="@color/black"
+        app:thumbStrokeWidth="2dp"
+        app:labelBehavior="floating"
+        app:layout_constraintStart_toEndOf="@id/tvVibrationLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvVibrationLabel" />
+
+    <!-- Open Spotify Button -->
+    <Button
+        android:id="@+id/btnOpenSpotify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="[Open Spotify]"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/sliderVibration"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Alarm Volume -->
+    <TextView
+        android:id="@+id/tvAlarmVolume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set alarm volume:"
+        android:textSize="14sp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/btnOpenSpotify"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvVolumePercentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="60%"
+        android:textSize="14sp"
+        app:layout_constraintTop_toTopOf="@id/tvAlarmVolume"
+        app:layout_constraintStart_toEndOf="@id/tvAlarmVolume" />
+
+    <!-- Desired Battery -->
+    <TextView
+        android:id="@+id/tvBattery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Desired battery %:"
+        android:textSize="14sp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tvAlarmVolume"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvBatteryPercentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="85%"
+        android:textSize="14sp"
+        app:layout_constraintTop_toTopOf="@id/tvBattery"
+        app:layout_constraintStart_toEndOf="@id/tvBattery" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
