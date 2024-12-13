@@ -81,7 +81,7 @@ public class WifiActivity extends AppCompatActivity {
             Intent wifiSettingsIntent = new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK);
             startActivity(wifiSettingsIntent);
         } else {
-            scanWifiNetworks();
+            //scanWifiNetworks();
         }
     }
 
