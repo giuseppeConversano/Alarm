@@ -73,14 +73,14 @@ public class BluetoothActivity extends AppCompatActivity {
     
     
     private void checkBluetoothPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.BLUETOOTH_CONNECT}, REQUEST_BLUETOOTH_PERMISSION);
-            } else {
-                enableBluetooth();
-            }
-        } else {
-            enableBluetooth();
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.BLUETOOTH_CONNECT}, REQUEST_BLUETOOTH_PERMISSION);
+        } else if (!bluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        } else{
+            bluetoothActive = true;
+            startDiscovery();
         }
     }
 
@@ -89,28 +89,33 @@ public class BluetoothActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_BLUETOOTH_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                enableBluetooth();
+                checkBluetoothPermission();
             } else {
                 Toast.makeText(this, "Bluetooth permission denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    @SuppressLint("MissingPermission")
-    private void enableBluetooth() {
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (!bluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        }
-        else{
-            bluetoothActive = true;
-            startDiscovery();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ENABLE_BT) {
+            if (resultCode == RESULT_OK) {
+                checkBluetoothPermission();
+            } else {
+                Toast.makeText(this, "Bluetooth not enabled", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
     @SuppressLint("MissingPermission")
     private void startDiscovery() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.BLUETOOTH_SCAN}, REQUEST_BLUETOOTH_PERMISSION);
+                return;
+            }
+        }
         deviceListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, discoveredDevicesList);
         discoveredDevices.clear(); // Clear previous devices to avoid duplicates
         discoveredDevicesList.clear();
@@ -121,7 +126,7 @@ public class BluetoothActivity extends AppCompatActivity {
             if (discoveredDevicesList.isEmpty()) {
                 Toast.makeText(getApplicationContext(), "No devices found", Toast.LENGTH_SHORT).show();
             }
-        }, 10000);
+        }, 5000);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select a Bluetooth Device");
@@ -137,7 +142,7 @@ public class BluetoothActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Connecting to " + selectedDevice.getName(), Toast.LENGTH_SHORT).show();
             bluetoothAdapter.cancelDiscovery();
             connectToDevice(selectedDevice);  // Connect to the selected device
-            discoveryDialog.dismiss();
+            //discoveryDialog.dismiss(); //TODO:voir si la selection est bonne (remplacer le bouton next par juste l'action de selectionner le bluetooth)
         });
     }
 
@@ -151,6 +156,7 @@ public class BluetoothActivity extends AppCompatActivity {
                 btSocket.connect();
                 inputStream = btSocket.getInputStream();
                 outputStream = btSocket.getOutputStream();
+                BluetoothConnectionManager.setBluetoothSocket(btSocket);
                 runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Connected to " + device.getName(), Toast.LENGTH_SHORT).show());
             } catch (IOException e) {
                 Log.e("Bluetooth", "Connection failed", e);
